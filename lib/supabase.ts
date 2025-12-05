@@ -4,10 +4,19 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+// Log para debug
+console.log('[Supabase] URL:', supabaseUrl);
+console.log('[Supabase] Service Key presente?', !!supabaseServiceKey);
+console.log('[Supabase] Service Key length:', supabaseServiceKey?.length || 0);
+
 // Cliente público (usa RLS)
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Cliente admin (bypassa RLS) - usar apenas em server-side
+if (!supabaseServiceKey) {
+  console.warn('⚠️ SUPABASE_SERVICE_ROLE_KEY não encontrada! Usando anon key (não vai funcionar para inserts)');
+}
+
 export const supabaseAdmin = supabaseServiceKey 
   ? createClient(supabaseUrl, supabaseServiceKey, {
       auth: {
