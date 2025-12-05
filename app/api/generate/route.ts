@@ -120,14 +120,12 @@ export async function POST(request: NextRequest) {
     // Gerar ID único para esta preview
     const previewId = `preview-${Date.now()}-${Math.random().toString(36).substring(7)}`;
     
-    // Salvar os cards e momentos em memória (temporário até integrar Supabase)
+    // Salvar APENAS em memória (não poluir banco com previews não pagas)
     const previewData = {
       id: previewId,
       relationType,
       person1Name,
       person2Name,
-      person1PhotoUrl,
-      person2PhotoUrl,
       totalMessages,
       conversationText: fileContent,
       cards: cardsAnalysis.cards.map((card: any) => ({
@@ -136,15 +134,17 @@ export async function POST(request: NextRequest) {
         winner: card.winner,
         stat: card.stat,
         statLabel: card.statLabel || '',
-        confidence: card.confidence || 0
+        confidence: card.confidence || 0,
+        icon: card.icon || '🎯'
       })),
       moments: cardsAnalysis.moments || [],
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 10 * 60 * 1000).toISOString() // Expira em 10 min
     };
     
     storiesInMemory.set(previewId, previewData);
     
-    console.log('[API Generate] ✅ Preview criada:', previewId);
+    console.log('[API Generate] ✅ Preview criada em memória (expira em 10 min):', previewId);
     
     // Retornar previewId para redirecionar
     return NextResponse.json({

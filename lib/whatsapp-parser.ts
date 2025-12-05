@@ -461,7 +461,7 @@ export function filterIrrelevantMessages(messages: Message[]): FilteredMessages 
     
     // Remover mensagens muito curtas (< 3 chars) que são só emojis
     // Simplified emoji detection (emojis are typically in ranges > \uD800)
-    if (content.length < 3 && /^[\u{1F300}-\u{1F9FF}\s]+$/u.test(content)) return false;
+    if (content.length < 3 && /^[\uD83C-\uDBFF\uDC00-\uDFFF\s]+/.test(content)) return false;
     
     // MANTER: Mensagens com keywords emocionais
     if (emotionalKeywords.some(keyword => content.includes(keyword))) return true;

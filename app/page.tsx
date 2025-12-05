@@ -14,36 +14,57 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
       {/* Header com Logo */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
-        <div className="container mx-auto px-4 py-2">
-          <div className="flex items-center justify-between relative">
-            <div className="flex-1"></div>
-            
-            <Link href="/" className="group absolute left-1/2 -translate-x-1/2">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            {/* Espaçador esquerda - Desktop */}
+            <nav className="hidden md:flex items-center gap-6 flex-1">
+              <button 
+                onClick={() => document.getElementById('batalhas')?.scrollIntoView({ behavior: 'smooth' })} 
+                className="text-gray-600 hover:text-purple-500 font-medium transition-colors"
+              >
+                Batalhas
+              </button>
+              <button 
+                onClick={() => document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' })} 
+                className="text-gray-600 hover:text-pink-500 font-medium transition-colors"
+              >
+                Timeline
+              </button>
+            </nav>
+
+            {/* Espaçador esquerda - Mobile */}
+            <div className="md:hidden flex-1"></div>
+
+            {/* Logo Centralizada */}
+            <Link href="/" className="group flex items-center justify-center">
               <Image 
                 src="/logo.png" 
                 alt="Nossa Timeline" 
-                width={70} 
-                height={70} 
-                className="group-hover:scale-110 transition-transform bg-transparent md:w-[110px] md:h-[110px]" 
-                style={{ background: 'transparent' }} 
+                width={120} 
+                height={120} 
+                className="group-hover:scale-105 transition-transform object-contain"
+                priority
               />
             </Link>
 
-            <nav className="hidden md:flex items-center gap-6">
-              <button onClick={() => document.getElementById('batalhas')?.scrollIntoView({ behavior: 'smooth' })} className="text-gray-600 hover:text-purple-500 font-medium transition-colors">
-                Batalhas
-              </button>
-              <button onClick={() => document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' })} className="text-gray-600 hover:text-pink-500 font-medium transition-colors">
-                Timeline
-              </button>
-              <Link href="/criar" className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all">
+            {/* CTA Direita - Desktop */}
+            <div className="hidden md:flex items-center gap-6 flex-1 justify-end">
+              <Link 
+                href="/criar" 
+                className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white px-6 py-2.5 rounded-full font-semibold hover:shadow-lg transition-all hover:scale-105"
+              >
                 Criar Grátis
               </Link>
-            </nav>
+            </div>
 
-            <button className="md:hidden">
-              <Menu className="w-6 h-6 text-gray-600" />
-            </button>
+            {/* CTA Direita - Mobile */}
+            <div className="md:hidden flex-1 flex justify-end">
+              <Link href="/criar">
+                <button className="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white px-4 py-2 rounded-full font-semibold text-sm">
+                  Criar
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
       </header>

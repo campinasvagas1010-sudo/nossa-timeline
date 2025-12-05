@@ -79,7 +79,7 @@ export async function generateStoryFromConversation(options: GenerateStoryOption
       messageSample,
       person1Name,
       person2Name,
-      options.relationType
+      options.relationType === 'familia' ? 'casal' : options.relationType
     );
     
     console.log(`[Story Generator] ✅ 5 cards analisados com sucesso`);

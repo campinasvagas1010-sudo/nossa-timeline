@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 
 /**
  * API pública para buscar story por slug
@@ -17,15 +17,18 @@ export async function GET(
     }
 
     // Buscar story no banco
-    const { data: story, error } = await supabase
+    const { data: story, error } = await supabaseAdmin
       .from('stories')
       .select('*')
       .eq('slug', slug)
       .single();
 
     if (error || !story) {
+      console.error('[Stories API] Story não encontrada:', error);
       return NextResponse.json({ error: 'História não encontrada' }, { status: 404 });
     }
+
+    console.log('[Stories API] Story encontrada:', story.slug, 'is_premium:', story.is_premium);
 
     // Retornar dados públicos
     return NextResponse.json({
@@ -40,10 +43,11 @@ export async function GET(
         start_date: story.start_date,
         end_date: story.end_date,
         total_messages: story.total_messages,
-        cards: story.cards,
-        moments: story.moments,
+        battles: story.battles || story.cards,
+        timeline: story.timeline || story.moments || [],
+        moments: story.moments, // Retrocompatível
         is_premium: story.is_premium,
-        full_timeline_generated: story.full_timeline_generated,
+        expires_at: story.expires_at,
         created_at: story.created_at,
       },
     });
