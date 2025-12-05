@@ -41,7 +41,7 @@ Configure estas variáveis em: **Project Settings → Environment Variables**
 
 ```env
 # Google Gemini AI
-GEMINI_API_KEY=AIzaSyBq4rThv0m1njIsw7j7PYxKgCdaUYLk2YY
+GEMINI_API_KEY=your_gemini_api_key_here
 
 # Supabase
 NEXT_PUBLIC_SUPABASE_URL=https://icobpmuaurvtlhxvfump.supabase.co
