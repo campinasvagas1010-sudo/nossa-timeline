@@ -252,14 +252,10 @@ async function callGPT4(prompt: string, battleType: string): Promise<BattleResul
     return {
       category: battleType as 'ciume' | 'orgulho' | 'demora' | 'brigas' | 'vacuo',
       winner: result.winner,
-      winnerPhoto: '', // Será preenchido depois
-      stat: `${result.confidence}%`,
-      statLabel: '',
+      loser: '', // Será determinado pela análise
       result: result.result,
       evidence: result.evidence || [],
       confidence: result.confidence,
-      details: [],
-      placar: { pedro: 0, ana: 0 },
       cardImage: battleType === 'ciume' ? BATTLE_CARD_IMAGES.ciume : BATTLE_CARD_IMAGES.orgulho,
     };
   } catch (error) {
