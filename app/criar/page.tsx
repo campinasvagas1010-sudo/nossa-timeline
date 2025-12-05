@@ -974,7 +974,7 @@ export default function CriarPage() {
                   {/* Timeline com dados reais */}
                   <div className="relative space-y-8 mb-8">
                     {/* Linha vertical */}
-                    <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-purple-300 via-pink-300 to-transparent -translate-x-1/2"></div>
+                    <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-purple-300 via-pink-300 to-transparent -translate-x-1/2"></div>
 
                     {/* Momentos intrigantes reais da conversa */}
                     {resultMoments && resultMoments.slice(0, 4).map((moment, index) => {
@@ -985,17 +985,17 @@ export default function CriarPage() {
                       const borderColor = index === 0 ? 'border-pink-200' : 'border-purple-200';
                       
                       return (
-                        <div key={index} className={`relative flex items-center ${isLeft ? 'justify-start' : 'justify-end'}`}>
-                          <div className={`absolute left-1/2 transform -translate-x-1/2 w-12 h-12 bg-gradient-to-br ${gradientColors} rounded-xl flex items-center justify-center text-white shadow-xl z-10 ${isLeft ? '' : '-rotate-3'}`}>
+                        <div key={index} className={`relative flex items-center justify-center ${isLeft ? 'md:justify-start' : 'md:justify-end'}`}>
+                          <div className={`hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-12 h-12 bg-gradient-to-br ${gradientColors} rounded-xl items-center justify-center text-white shadow-xl z-10 ${isLeft ? '' : '-rotate-3'}`}>
                             <span className="text-2xl">{moment.emoji}</span>
                           </div>
 
-                          <div className={`w-[calc(50%-3rem)] ${isLeft ? 'pr-8' : 'pl-8'}`}>
+                          <div className={`w-full md:w-[calc(50%-3rem)] px-4 md:px-0 ${isLeft ? 'md:pr-8' : 'md:pl-8'}`}>
                             <div 
                               ref={(el) => { timelineCardRefs.current[index] = el; }}
                               className={`bg-white/90 backdrop-blur-xl rounded-2xl p-5 shadow-xl border ${borderColor}`}
                             >
-                              <div className={`flex items-center gap-2 mb-3 ${isLeft ? '' : 'justify-end'}`}>
+                              <div className={`flex items-center gap-2 mb-3 ${isLeft ? '' : 'md:justify-end'}`}>
                                 {isLeft && <span className="text-2xl">{moment.emoji}</span>}
                                 <div className={`bg-gradient-to-br ${gradientColors} px-4 py-1.5 rounded-full shadow-lg`}>
                                   <p className="text-sm font-black text-white tracking-wider">{moment.category}</p>
@@ -1003,23 +1003,23 @@ export default function CriarPage() {
                                 {!isLeft && <span className="text-2xl">{moment.emoji}</span>}
                               </div>
                               
-                              <h3 className={`text-xl font-black text-gray-900 mb-3 leading-tight ${isLeft ? '' : 'text-right'}`}>
+                              <h3 className={`text-xl font-black text-gray-900 mb-3 leading-tight ${isLeft ? '' : 'md:text-right'}`}>
                                 {moment.title}
                               </h3>
                               
-                              <p className={`text-gray-600 text-sm mb-3 ${isLeft ? '' : 'text-right'}`}>
+                              <p className={`text-gray-600 text-sm mb-3 ${isLeft ? '' : 'md:text-right'}`}>
                                 {moment.description}
                               </p>
 
                               {moment.snippet && (
-                                <div className={`bg-gray-50 rounded-lg p-3 mb-3 ${isLeft ? '' : 'text-right'}`}>
+                                <div className={`bg-gray-50 rounded-lg p-3 mb-3 ${isLeft ? '' : 'md:text-right'}`}>
                                   <p className="text-xs text-gray-700 italic line-clamp-2">
                                     "{moment.snippet}"
                                   </p>
                                 </div>
                               )}
 
-                              <div className={`mt-3 pt-3 border-t ${isLeft ? 'border-pink-100' : 'border-purple-100'} flex items-center ${isLeft ? 'justify-between' : 'justify-between flex-row-reverse'} text-xs`}>
+                              <div className={`mt-3 pt-3 border-t ${isLeft ? 'border-pink-100' : 'border-purple-100'} flex items-center justify-between ${isLeft ? '' : 'md:flex-row-reverse'} text-xs`}>
                                 <div className={`flex items-center gap-1.5 text-gray-600 font-medium`}>
                                   <MessageCircle className={`w-3 h-3 ${isLeft ? 'text-pink-500' : 'text-purple-500'}`} />
                                   <span>Momento real</span>
@@ -1044,11 +1044,11 @@ export default function CriarPage() {
                       {/* Momentos bloqueados com blur */}
                       <div className="blur-sm opacity-40 pointer-events-none space-y-8">
                         {/* Momento bloqueado 1 */}
-                        <div className="relative flex items-center justify-start">
-                          <div className="absolute left-1/2 transform -translate-x-1/2 w-12 h-12 bg-gray-400 rounded-xl flex items-center justify-center text-white shadow-xl z-10">
+                        <div className="relative flex items-center justify-center md:justify-start">
+                          <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-12 h-12 bg-gray-400 rounded-xl items-center justify-center text-white shadow-xl z-10">
                             <Heart className="w-6 h-6" />
                           </div>
-                          <div className="w-[calc(50%-3rem)] pr-8">
+                          <div className="w-full md:w-[calc(50%-3rem)] px-4 md:px-0 md:pr-8">
                             <div className="bg-gray-100 rounded-2xl p-5">
                               <div className="h-4 bg-gray-300 rounded w-1/3 mb-3"></div>
                               <div className="h-6 bg-gray-300 rounded w-2/3 mb-2"></div>
