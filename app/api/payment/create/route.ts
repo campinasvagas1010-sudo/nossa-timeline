@@ -32,14 +32,27 @@ export async function POST(request: NextRequest) {
 
     console.log('[Payment API] ✅ Pagamento criado:', mpPayment.paymentId);
 
-    // Retornar QR Code diretamente (sem salvar no banco)
-    // Cliente vai re-enviar conversa DEPOIS de pagar
+    // Salvar pagamento no banco para validação posterior
+    const { error: dbError } = await supabaseAdmin
+      .from('payments')
+      .insert({
+        email: email.toLowerCase().trim(),
+        payment_id: mpPayment.paymentId,
+        status: 'pending',
+      });
+
+    if (dbError) {
+      console.error('[Payment API] Erro ao salvar no banco:', dbError);
+      // Não retorna erro pro cliente, pagamento já foi criado no MercadoPago
+    }
+
     return NextResponse.json({
       success: true,
       paymentId: mpPayment.paymentId,
       pixQrCode: mpPayment.qrCode,
       pixCopyPaste: mpPayment.qrCodeText,
       amount: 9.90,
+      email: email.toLowerCase().trim(),
     });
 
   } catch (error) {

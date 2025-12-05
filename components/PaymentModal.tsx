@@ -75,15 +75,40 @@ export default function PaymentModal({ isOpen, onClose, previewId, onSuccess }: 
                 className="w-64 h-64 mx-auto border-4 border-purple-200 rounded-xl" 
               />
             )}
+            
             <button onClick={copyPixCode} className="w-full bg-purple-600 text-white px-4 py-3 rounded-xl hover:bg-purple-700 transition-colors font-semibold">
               📋 Copiar código PIX
             </button>
-            <p className="text-sm text-gray-600 text-center">
-              Abra seu app de pagamentos e escaneie o QR Code ou copie o código PIX
-            </p>
+
+            {/* Email de acesso */}
+            <div className="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-4 text-center">
+              <p className="font-semibold text-gray-800 mb-1">📧 Seu email de acesso:</p>
+              <p className="text-purple-600 font-mono font-bold break-all">{paymentData.email}</p>
+              <p className="text-xs text-gray-600 mt-2">⚠️ Anote este email! Você vai precisar dele para acessar a área premium.</p>
+            </div>
+
+            {/* Botão de acesso premium */}
+            <div className="border-t-2 border-gray-200 pt-4">
+              <p className="text-sm text-gray-600 text-center mb-3">
+                Após pagar, clique no botão abaixo:
+              </p>
+              <a 
+                href={`/premium?email=${encodeURIComponent(paymentData.email)}`}
+                className="block w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-4 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all font-bold text-center shadow-lg"
+              >
+                ✨ Acessar Área Premium
+              </a>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Aviso sobre o email */}
+            <div className="bg-blue-50 border-2 border-blue-300 rounded-xl p-3 mb-4">
+              <p className="text-sm text-blue-800 text-center">
+                ⚠️ <strong>Importante:</strong> O email será usado para acessar a área premium após o pagamento!
+              </p>
+            </div>
+
             <input
               type="text"
               required
@@ -92,14 +117,16 @@ export default function PaymentModal({ isOpen, onClose, previewId, onSuccess }: 
               placeholder="Nome completo"
               className="w-full px-4 py-3 border rounded-xl"
             />
-            <input
-              type="email"
-              required
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              placeholder="Email"
-              className="w-full px-4 py-3 border rounded-xl"
-            />
+            <div className="relative">
+              <input
+                type="email"
+                required
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                placeholder="Email (guarde este email!)"
+                className="w-full px-4 py-3 border-2 border-purple-300 rounded-xl focus:border-purple-500 outline-none"
+              />
+            </div>
             {error && <p className="text-red-600 text-sm">{error}</p>}
             <button
               type="submit"

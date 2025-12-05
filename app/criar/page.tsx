@@ -3,6 +3,7 @@
 import { useState, FormEvent, ChangeEvent, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Upload, Heart, Users, Home as HomeIcon, Loader2, Image as ImageIcon, FileText, CheckCircle2, ArrowLeft, Trophy, TrendingUp, Share2, Sparkles, ChevronLeft, ChevronRight, Instagram, Download, Lock, Clock, MessageCircle } from 'lucide-react';
 import { RelationType } from '@/types/story';
 import JSZip from 'jszip';
@@ -527,9 +528,15 @@ export default function CriarPage() {
             <ArrowLeft className="w-5 h-5" />
             <span className="font-medium">Voltar</span>
           </Link>
-          <h1 className="text-xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
-            Nosso Timeline
-          </h1>
+          <Link href="/" className="flex items-center justify-center">
+            <Image 
+              src="/logo.png" 
+              alt="Logo" 
+              width={80} 
+              height={80} 
+              className="object-contain hover:scale-105 transition-transform"
+            />
+          </Link>
           <div className="w-20" /> {/* Spacer */}
         </div>
       </header>
