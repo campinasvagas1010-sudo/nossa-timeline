@@ -142,9 +142,9 @@ export async function POST(request: NextRequest) {
       expiresAt: new Date(Date.now() + 10 * 60 * 1000).toISOString() // Expira em 10 min
     };
     
-    storiesInMemory.set(previewId, previewData);
+    // storiesInMemory.set(previewId, previewData); // Desabilitado - pagamento não depende de preview
     
-    console.log('[API Generate] ✅ Preview criada em memória (expira em 10 min):', previewId);
+    console.log('[API Generate] ✅ Preview criada (não salva em memória):', previewId);
     
     // Retornar previewId para redirecionar
     return NextResponse.json({
