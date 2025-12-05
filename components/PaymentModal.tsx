@@ -69,11 +69,18 @@ export default function PaymentModal({ isOpen, onClose, previewId, onSuccess }: 
         {paymentData ? (
           <div className="space-y-4">
             {paymentData.pixQrCode && (
-              <img src={paymentData.pixQrCode} alt="QR Code" className="w-48 h-48 mx-auto" />
+              <img 
+                src={`data:image/png;base64,${paymentData.pixQrCode}`} 
+                alt="QR Code PIX" 
+                className="w-64 h-64 mx-auto border-4 border-purple-200 rounded-xl" 
+              />
             )}
-            <button onClick={copyPixCode} className="w-full bg-purple-600 text-white px-4 py-3 rounded-xl">
+            <button onClick={copyPixCode} className="w-full bg-purple-600 text-white px-4 py-3 rounded-xl hover:bg-purple-700 transition-colors font-semibold">
               📋 Copiar código PIX
             </button>
+            <p className="text-sm text-gray-600 text-center">
+              Abra seu app de pagamentos e escaneie o QR Code ou copie o código PIX
+            </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
