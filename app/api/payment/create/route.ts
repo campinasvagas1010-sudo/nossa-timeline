@@ -20,9 +20,6 @@ export async function POST(request: NextRequest) {
 
     console.log('[Payment API] Criando pagamento para:', { email, name });
 
-    // Gerar slug único
-    const slug = `timeline-${Date.now()}-${Math.random().toString(36).substring(7)}`;
-
     // Criar pagamento MercadoPago DIRETO
     const mpPayment = await createPixPayment({
       email,
@@ -30,51 +27,19 @@ export async function POST(request: NextRequest) {
       cpf,
       amount: 9.90,
       description: 'Nossa Timeline - Acesso Premium 48h',
-      externalReference: slug,
+      externalReference: `payment-${Date.now()}`,
     });
 
-    // Salvar NO BANCO com dados mínimos (cliente vai enviar conversa depois de pagar)
-    const { data: savedStory, error: saveError } = await supabaseAdmin
-      .from('stories')
-      .insert({
-        slug: slug,
-        person1_name: name,
-        person2_name: 'Aguardando',
-        relationship_type: 'casal',
-        start_date: new Date().toISOString().split('T')[0],
-        end_date: new Date().toISOString().split('T')[0],
-        total_messages: 0,
-        battles: [],
-        timeline: [],
-        is_premium: false,
-        payment_id: mpPayment.paymentId,
-        payment_status: 'pending',
-      })
-      .select()
-      .single();
+    console.log('[Payment API] ✅ Pagamento criado:', mpPayment.paymentId);
 
-    if (saveError) {
-      console.error('[Payment API] Erro ao salvar story:', saveError);
-      console.error('[Payment API] Detalhes do erro:', JSON.stringify(saveError, null, 2));
-      return NextResponse.json(
-        { 
-          error: 'Erro ao salvar no banco',
-          details: saveError.message || saveError,
-          code: saveError.code || 'unknown'
-        },
-        { status: 500 }
-      );
-    }
-
-    console.log('[Payment API] ✅ Pagamento criado:', mpPayment.paymentId, 'Slug:', slug);
-
+    // Retornar QR Code diretamente (sem salvar no banco)
+    // Cliente vai re-enviar conversa DEPOIS de pagar
     return NextResponse.json({
       success: true,
       paymentId: mpPayment.paymentId,
       pixQrCode: mpPayment.qrCode,
       pixCopyPaste: mpPayment.qrCodeText,
       amount: 9.90,
-      slug: slug,
     });
 
   } catch (error) {
