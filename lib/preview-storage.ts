@@ -20,7 +20,8 @@ export const storiesInMemory = new Map<string, PreviewData>();
 // Limpar previews expiradas a cada 5 minutos
 setInterval(() => {
   const now = Date.now();
-  for (const [id, preview] of storiesInMemory.entries()) {
+  const entries = Array.from(storiesInMemory.entries());
+  for (const [id, preview] of entries) {
     if (new Date(preview.expiresAt).getTime() < now) {
       storiesInMemory.delete(id);
       console.log('[Memory] Preview expirada removida:', id);
