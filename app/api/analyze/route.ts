@@ -196,10 +196,17 @@ ${filtered.slice(-50).map(m => `[${m.timestamp.toLocaleString('pt-BR')}] ${m.sen
           console.log('[Analyze] Rate limit detectado, aguardando 60s...');
           await new Promise(resolve => setTimeout(resolve, 60000));
           
-          // Tentar novamente
+          // Tentar novamente (recriar contexto)
+          const retryContext = `Participantes: ${conversation.participants.join(' e ')}
+Período: ${conversation.startDate.toLocaleDateString('pt-BR')} a ${conversation.endDate.toLocaleDateString('pt-BR')}
+Total de mensagens: ${filtered.length}
+
+Últimas 50 mensagens relevantes:
+${filtered.slice(-50).map(m => `[${m.timestamp.toLocaleString('pt-BR')}] ${m.sender}: ${m.content}`).join('\n')}`;
+          
           try {
             const result = await analyzeWithGemini(
-              `${category.question}\n\nContexto:\n${context}`
+              `${category.question}\n\nContexto:\n${retryContext}`
             );
             
             battles.push({
