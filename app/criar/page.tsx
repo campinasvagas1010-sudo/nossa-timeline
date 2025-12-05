@@ -237,17 +237,14 @@ export default function CriarPage() {
         throw new Error(data.error || 'Erro ao gerar história');
       }
 
-      if (data.success && data.previewId) {
+      if (data.success && data.previewId && data.data) {
         // Salvar previewId para usar no pagamento
         setPreviewId(data.previewId);
         
-        // Buscar os cards gerados
-        const resultResponse = await fetch(`/api/generate?id=${data.previewId}`);
-        const resultData = await resultResponse.json();
-        
-        if (resultData.success && resultData.data.cards) {
-          setResultCards(resultData.data.cards);
-          setResultMoments(resultData.data.moments || []);
+        // Usar dados que já vieram no POST (não precisa fazer GET)
+        if (data.data.cards) {
+          setResultCards(data.data.cards);
+          setResultMoments(data.data.moments || []);
           setShowResults(true);
           setLoading(false);
           
@@ -256,7 +253,7 @@ export default function CriarPage() {
             resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }, 100);
         } else {
-          throw new Error('Erro ao carregar resultados');
+          throw new Error('Dados dos cards não encontrados');
         }
       } else {
         throw new Error('Resposta inválida do servidor');
