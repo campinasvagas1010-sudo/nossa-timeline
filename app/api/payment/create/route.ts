@@ -55,8 +55,13 @@ export async function POST(request: NextRequest) {
 
     if (saveError) {
       console.error('[Payment API] Erro ao salvar story:', saveError);
+      console.error('[Payment API] Detalhes do erro:', JSON.stringify(saveError, null, 2));
       return NextResponse.json(
-        { error: 'Erro ao salvar no banco' },
+        { 
+          error: 'Erro ao salvar no banco',
+          details: saveError.message || saveError,
+          code: saveError.code || 'unknown'
+        },
         { status: 500 }
       );
     }
