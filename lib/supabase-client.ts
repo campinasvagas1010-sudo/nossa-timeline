@@ -39,13 +39,13 @@ export interface Story {
   start_date: string;
   end_date: string;
   total_messages: number;
-  battles: BattleResult[];
+  battles: SupabaseBattleResult[];
   timeline?: TimelineEvent[];
   is_premium: boolean;
   created_at: string;
 }
 
-export interface BattleResult {
+export interface SupabaseBattleResult {
   category: string;
   name: string;
   winner: string;
