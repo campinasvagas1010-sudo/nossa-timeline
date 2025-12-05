@@ -171,9 +171,7 @@ Total de mensagens: ${filtered.length}
 ${filtered.slice(-50).map(m => `[${m.timestamp.toLocaleString('pt-BR')}] ${m.sender}: ${m.content}`).join('\n')}`;
         
         const result = await analyzeWithGemini(
-          category.question,
-          context,
-          conversation.participants
+          `${category.question}\n\nContexto:\n${context}`
         );
         
         battles.push({
@@ -201,9 +199,7 @@ ${filtered.slice(-50).map(m => `[${m.timestamp.toLocaleString('pt-BR')}] ${m.sen
           // Tentar novamente
           try {
             const result = await analyzeWithGemini(
-              category.question,
-              context,
-              conversation.participants
+              `${category.question}\n\nContexto:\n${context}`
             );
             
             battles.push({
