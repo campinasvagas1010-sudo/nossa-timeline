@@ -363,7 +363,7 @@ export default function PublicStoryPage() {
                       {/* Messages (WhatsApp style) */}
                       {moment.snippet && (
                         <div className="space-y-3 bg-gradient-to-br from-gray-50 to-gray-100 p-4 rounded-xl">
-                          {moment.snippet.split('\n').map((line, idx) => {
+                          {moment.snippet.split('\n').map((line: string, idx: number) => {
                             if (!line.trim()) return null;
                             
                             // Detectar quem está falando

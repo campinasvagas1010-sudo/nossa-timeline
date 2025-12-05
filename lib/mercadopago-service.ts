@@ -90,12 +90,19 @@ export async function getPaymentStatus(paymentId: string) {
   try {
     const response = await payment.get({ id: paymentId });
     return {
+      success: true,
       status: response.status,
       statusDetail: response.status_detail,
       externalReference: response.external_reference,
     };
   } catch (error) {
     console.error('[MercadoPago] Erro ao consultar pagamento:', error);
-    throw error;
+    return {
+      success: false,
+      error: 'Erro ao consultar pagamento',
+      status: undefined,
+      statusDetail: undefined,
+      externalReference: undefined,
+    };
   }
 }

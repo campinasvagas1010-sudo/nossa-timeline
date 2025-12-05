@@ -250,7 +250,7 @@ async function callGPT4(prompt: string, battleType: string): Promise<BattleResul
     const result = await analyzeWithGemini(prompt);
     
     return {
-      category: battleType,
+      category: battleType as 'ciume' | 'orgulho' | 'demora' | 'brigas' | 'vacuo',
       winner: result.winner,
       winnerPhoto: '', // Será preenchido depois
       stat: `${result.confidence}%`,

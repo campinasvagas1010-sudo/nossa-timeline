@@ -26,7 +26,7 @@ export async function GET(
     return NextResponse.json({
       success: true,
       status: result.status,
-      isPaid: result.status === 'PAID',
+      isPaid: result.status === 'approved',
     });
 
   } catch (error: any) {

@@ -15,6 +15,7 @@ export interface ConversationMetadata {
   startDate: Date;
   endDate: Date;
   totalMessages: number;
+  totalDays?: number;
   participants: string[];
   relationType: RelationType;
 }
@@ -187,6 +188,8 @@ export interface Battle {
   person2Score: number | string;
   winner: string;
   emoji: string;
+  metric?: string; // Descrição da métrica usada
+  funnyComment?: string; // Comentário engraçado sobre a batalha
   confidence?: number; // 0-100 (confiabilidade da análise)
   analysisTimeframe?: {
     months: number;
