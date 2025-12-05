@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { parseWhatsAppConversation } from '@/lib/whatsapp-parser';
-import { generatePreviewStory } from '@/lib/story-generator';
-import { RelationType, PreviewStoryData } from '@/types/story';
+import { RelationType } from '@/types/story';
 
 /**
  * API Route para gerar história a partir de conversa do WhatsApp
@@ -22,10 +21,10 @@ import { RelationType, PreviewStoryData } from '@/types/story';
 // Armazenamento temporário em memória (substituir por banco depois)
 // Usar global para persistir entre hot reloads em desenvolvimento
 const globalForStories = global as typeof global & {
-  storiesInMemory?: Map<string, PreviewStoryData>;
+  storiesInMemory?: Map<string, any>;
 };
 
-const storiesInMemory = globalForStories.storiesInMemory ?? new Map<string, PreviewStoryData>();
+const storiesInMemory = globalForStories.storiesInMemory ?? new Map<string, any>();
 if (!globalForStories.storiesInMemory) {
   globalForStories.storiesInMemory = storiesInMemory;
 }

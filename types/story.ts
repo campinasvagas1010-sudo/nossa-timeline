@@ -46,6 +46,7 @@ export interface Story {
   compatibilityScore: number; // 0-100
   timeline: TimelineChapter[];
   stats: Statistics;
+  battles?: Battle[]; // Opcional - batalhas de comparação
   modes: {
     romance: RomanceMode;
     disputa: DisputaMode;
