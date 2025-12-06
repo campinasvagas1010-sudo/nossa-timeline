@@ -445,7 +445,7 @@ export default function CriarPage() {
 
       // 4. Descrição (Quadrado Roxo) - X:95, Y:770, largura máx 890
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = `500 36px ${fontFamily}`;
+      ctx.font = `bold 60px ${fontFamily}`;
       ctx.textAlign = 'left';
       ctx.textBaseline = 'top';
       
@@ -462,18 +462,18 @@ export default function CriarPage() {
         
         // Desenhar aspas de abertura
         ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-        ctx.font = `italic 600 48px ${fontFamily}`;
+        ctx.font = `italic bold 96px ${fontFamily}`;
         ctx.fillText('"', 95, snippetStartY - 10);
         
         // Texto do snippet
         ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-        ctx.font = `italic 400 28px ${fontFamily}`;
+        ctx.font = `italic 56px ${fontFamily}`;
         ctx.textAlign = 'left';
         ctx.textBaseline = 'top';
         
         const maxSnippetWidth = 850;
         const snippetLines = wrapText(ctx, moment.snippet, maxSnippetWidth);
-        const snippetLineHeight = 28 * 1.5;
+        const snippetLineHeight = 56 * 1.5;
         
         // Limitar a 4 linhas máximo
         const limitedSnippetLines = snippetLines.slice(0, 4);
@@ -485,7 +485,7 @@ export default function CriarPage() {
         const lastLineY = snippetStartY + (limitedSnippetLines.length - 1) * snippetLineHeight;
         const lastLineWidth = ctx.measureText(limitedSnippetLines[limitedSnippetLines.length - 1] || '').width;
         ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-        ctx.font = `italic 600 48px ${fontFamily}`;
+        ctx.font = `italic bold 96px ${fontFamily}`;
         ctx.fillText('"', 130 + lastLineWidth + 10, lastLineY - 10);
       }
 
