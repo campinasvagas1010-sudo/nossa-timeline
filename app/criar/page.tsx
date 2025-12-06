@@ -417,26 +417,26 @@ export default function CriarPage() {
       const maxTitleWidth = 930;
       const titleLines = wrapText(ctx, moment.title, maxTitleWidth);
       const titleLineHeight = titleFontSize * 1.1;
-      const titleStartY = 665 - ((titleLines.length - 1) * titleLineHeight) / 2;
+      const titleStartY = 640 - ((titleLines.length - 1) * titleLineHeight) / 2;
       titleLines.forEach((line, i) => {
         ctx.fillText(line, 540, titleStartY + i * titleLineHeight);
       });
 
-      // 3. Data (Calendário) - Centro em X:955, Y:547, rotação -4deg
+      // 3. Data (Calendário) - Centro em X:955, Y:510, rotação -4deg
       if (moment.date) {
         ctx.save();
-        ctx.translate(955, 547);
+        ctx.translate(955, 510);
         ctx.rotate(-4 * Math.PI / 180);
         ctx.fillStyle = '#000000';
-        ctx.font = `700 22px ${fontFamily}`;
+        ctx.font = `bold 31px ${fontFamily}`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         
         // Quebrar data em linhas se tiver espaço (ex: "15 JAN 2024" -> "15 JAN" + "2024")
         const dateParts = moment.date.split(' ');
         if (dateParts.length === 3) {
-          ctx.fillText(`${dateParts[0]} ${dateParts[1]}`, 0, -12);
-          ctx.fillText(dateParts[2], 0, 12);
+          ctx.fillText(`${dateParts[0]} ${dateParts[1]}`, 0, -17);
+          ctx.fillText(dateParts[2], 0, 17);
         } else {
           ctx.fillText(moment.date, 0, 0);
         }
