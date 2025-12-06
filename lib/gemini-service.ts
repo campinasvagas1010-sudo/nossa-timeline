@@ -188,6 +188,12 @@ ${relationType === 'casal' ? `
 
 Escolha momentos INTRIGANTES mas LEVES, que gerem curiosidade positiva e sejam ADEQUADOS ao tipo de relação (${relationType}).
 
+**IMPORTANTE - EXTRAÇÃO DE DATAS:**
+- Formato nas mensagens: [DD/MM/YYYY HH:MM] Nome: mensagem
+- Extraia a data REAL do timestamp da mensagem relacionada ao momento
+- Converta para formato: "DD MÊS AAAA" (mês abreviado em maiúsculas com 3 letras)
+- Exemplos: [15/01/2024] → "15 JAN 2024", [03/03/2023] → "03 MAR 2023", [22/11/2024] → "22 NOV 2024"
+
 Retorne no formato:
 {
   "cards": [...],
@@ -197,28 +203,32 @@ Retorne no formato:
       "emoji": "😱",
       "category": "BRIGA",
       "description": "Breve contexto do que aconteceu",
-      "snippet": "Trecho real da conversa (1-2 mensagens)"
+      "snippet": "Trecho real da conversa (1-2 mensagens)",
+      "date": "15 JAN 2024"
     },
     {
       "title": "Segundo momento intrigante",
       "emoji": "🎉",
       "category": "VIAGEM",
       "description": "Breve contexto",
-      "snippet": "Trecho da conversa"
+      "snippet": "Trecho da conversa",
+      "date": "20 FEV 2024"
     },
     {
       "title": "Terceiro momento marcante",
       "emoji": "💕",
       "category": "ROMANCE",
       "description": "Breve contexto",
-      "snippet": "Trecho da conversa"
+      "snippet": "Trecho da conversa",
+      "date": "14 MAR 2024"
     },
     {
       "title": "Quarto momento especial",
       "emoji": "🤣",
       "category": "ENGRAÇADO",
       "description": "Breve contexto",
-      "snippet": "Trecho da conversa"
+      "snippet": "Trecho da conversa",
+      "date": "05 ABR 2024"
     }
   ]
 }
@@ -252,11 +262,16 @@ ${messages}
 Identifique 8-12 momentos marcantes que contam a história dessa relação. Para cada momento, forneça:
 
 1. **título**: Nome do momento (ex: "Primeiro Oi", "Declaração Inesperada", "A Grande Briga")
-2. **date**: Data aproximada baseada nos timestamps (formato: "15 Jan 2024")
+2. **date**: Data REAL extraída do timestamp da mensagem (formato: "DD MÊS AAAA" ex: "15 JAN 2024", "03 MAR 2023")
 3. **description**: Descrição breve e envolvente (1-2 frases)
 4. **emoji**: Emoji que representa o momento
 5. **type**: "positive", "negative" ou "neutral"
 6. **messages**: Array com 2-3 mensagens reais que exemplificam o momento
+
+**IMPORTANTE - EXTRAÇÃO DE DATAS:**
+- Formato nas mensagens: [DD/MM/YYYY HH:MM] Nome: mensagem
+- Extraia o DD/MM/YYYY e converta para "DD MÊS AAAA" (mês em maiúsculas e abreviado com 3 letras)
+- Exemplos: [15/01/2024] → "15 JAN 2024", [03/03/2023] → "03 MAR 2023"
 
 **IMPORTANTE:**
 - Use linguagem emocional e envolvente
@@ -264,13 +279,14 @@ Identifique 8-12 momentos marcantes que contam a história dessa relação. Para
 - Inclua momentos positivos E negativos (storytelling real)
 - Use emojis apropriados
 - As mensagens devem ser EXATAMENTE como aparecem na conversa
+- A DATA DEVE SER EXTRAÍDA DO TIMESTAMP REAL DA MENSAGEM
 
 Retorne APENAS um JSON válido no formato:
 {
   "timeline": [
     {
       "title": "Como Tudo Começou",
-      "date": "15 Jan 2024",
+      "date": "15 JAN 2024",
       "description": "O primeiro 'oi' que mudou tudo...",
       "emoji": "✨",
       "type": "positive",

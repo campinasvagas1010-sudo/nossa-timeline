@@ -27,6 +27,7 @@ interface Moment {
   category: string;
   description: string;
   snippet: string;
+  date: string;
 }
 
 export default function CriarPage() {
@@ -370,79 +371,143 @@ export default function CriarPage() {
   };
 
   const shareTimelineCard = async (momentIndex: number) => {
-    const cardElement = timelineCardRefs.current[momentIndex];
-    if (!cardElement) return;
+    const moment = resultMoments?.[momentIndex];
+    if (!moment) return;
 
     setIsDownloading(true);
     try {
-      // Criar um container temporário com o card + marca d'água
-      const tempContainer = document.createElement('div');
-      tempContainer.style.position = 'absolute';
-      tempContainer.style.left = '-9999px';
-      tempContainer.style.width = '600px';
-      tempContainer.style.backgroundColor = 'white';
-      tempContainer.style.padding = '40px';
-      tempContainer.style.borderRadius = '24px';
-      document.body.appendChild(tempContainer);
+      // Criar canvas 1080x1920 (formato Stories)
+      const canvas = document.createElement('canvas');
+      canvas.width = 1080;
+      canvas.height = 1920;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Não foi possível criar canvas');
 
-      // Clonar o card
-      const clonedCard = cardElement.cloneNode(true) as HTMLElement;
-      clonedCard.style.width = '100%';
-      tempContainer.appendChild(clonedCard);
-
-      // Adicionar marca d'água
-      const watermark = document.createElement('div');
-      watermark.style.marginTop = '24px';
-      watermark.style.paddingTop = '24px';
-      watermark.style.borderTop = '2px solid #e5e7eb';
-      watermark.style.display = 'flex';
-      watermark.style.justifyContent = 'center';
-      watermark.style.alignItems = 'center';
-      watermark.style.gap = '12px';
+      // Carregar imagem de fundo
+      const bgImg = document.createElement('img') as HTMLImageElement;
+      bgImg.crossOrigin = 'anonymous';
       
-      watermark.innerHTML = `
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-        </svg>
-        <span style="
-          color: #6b7280; 
-          font-size: 16px; 
-          font-weight: 600; 
-          font-family: 'Inter', sans-serif;
-        ">
-          nossa-timeline.com
-        </span>
-      `;
-      
-      tempContainer.appendChild(watermark);
-
-      // Gerar imagem do container temporário
-      const dataUrl = await toPng(tempContainer, {
-        quality: 1,
-        pixelRatio: 2,
-        backgroundColor: 'white'
+      await new Promise<void>((resolve, reject) => {
+        bgImg.onload = () => resolve();
+        bgImg.onerror = () => reject(new Error('Erro ao carregar imagem'));
+        bgImg.src = '/CARD COMPARTILHÁVEL.png';
       });
 
-      // Remover container temporário
-      document.body.removeChild(tempContainer);
+      // Desenhar imagem de fundo
+      ctx.drawImage(bgImg, 0, 0, 1080, 1920);
 
-      // Converter dataUrl para Blob
+      // Configurar fonte padrão
+      const fontFamily = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif";
+
+      // 1. Categoria/Tópico (Pílula) - Centro em X:250, Y:532
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = `800 40px ${fontFamily}`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(moment.category.toUpperCase(), 250, 532);
+
+      // 2. Título (Faixa Amarela) - Centro em X:540, Y:665
+      ctx.fillStyle = '#000000';
+      const titleFontSize = moment.title.length > 40 ? 48 : moment.title.length > 25 ? 58 : 68;
+      ctx.font = `800 ${titleFontSize}px ${fontFamily}`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      
+      // Quebrar título se muito longo
+      const maxTitleWidth = 930;
+      const titleLines = wrapText(ctx, moment.title, maxTitleWidth);
+      const titleLineHeight = titleFontSize * 1.1;
+      const titleStartY = 665 - ((titleLines.length - 1) * titleLineHeight) / 2;
+      titleLines.forEach((line, i) => {
+        ctx.fillText(line, 540, titleStartY + i * titleLineHeight);
+      });
+
+      // 3. Data (Calendário) - Centro em X:955, Y:547, rotação -4deg
+      if (moment.date) {
+        ctx.save();
+        ctx.translate(955, 547);
+        ctx.rotate(-4 * Math.PI / 180);
+        ctx.fillStyle = '#000000';
+        ctx.font = `700 22px ${fontFamily}`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        // Quebrar data em linhas se tiver espaço (ex: "15 JAN 2024" -> "15 JAN" + "2024")
+        const dateParts = moment.date.split(' ');
+        if (dateParts.length === 3) {
+          ctx.fillText(`${dateParts[0]} ${dateParts[1]}`, 0, -12);
+          ctx.fillText(dateParts[2], 0, 12);
+        } else {
+          ctx.fillText(moment.date, 0, 0);
+        }
+        ctx.restore();
+      }
+
+      // 4. Descrição (Quadrado Roxo) - X:95, Y:770, largura máx 890
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = `500 36px ${fontFamily}`;
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      
+      const maxDescWidth = 890;
+      const descLines = wrapText(ctx, moment.description, maxDescWidth);
+      const descLineHeight = 36 * 1.6;
+      descLines.forEach((line, i) => {
+        ctx.fillText(line, 95, 770 + i * descLineHeight);
+      });
+
+      // 5. Snippet (Trecho da conversa) - Abaixo da descrição
+      if (moment.snippet) {
+        const snippetStartY = 770 + (descLines.length * descLineHeight) + 60; // 60px de espaço
+        
+        // Desenhar aspas de abertura
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        ctx.font = `italic 600 48px ${fontFamily}`;
+        ctx.fillText('"', 95, snippetStartY - 10);
+        
+        // Texto do snippet
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.font = `italic 400 28px ${fontFamily}`;
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        
+        const maxSnippetWidth = 850;
+        const snippetLines = wrapText(ctx, moment.snippet, maxSnippetWidth);
+        const snippetLineHeight = 28 * 1.5;
+        
+        // Limitar a 4 linhas máximo
+        const limitedSnippetLines = snippetLines.slice(0, 4);
+        limitedSnippetLines.forEach((line, i) => {
+          ctx.fillText(line, 130, snippetStartY + i * snippetLineHeight);
+        });
+        
+        // Desenhar aspas de fechamento
+        const lastLineY = snippetStartY + (limitedSnippetLines.length - 1) * snippetLineHeight;
+        const lastLineWidth = ctx.measureText(limitedSnippetLines[limitedSnippetLines.length - 1] || '').width;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        ctx.font = `italic 600 48px ${fontFamily}`;
+        ctx.fillText('"', 130 + lastLineWidth + 10, lastLineY - 10);
+      }
+
+      // Converter canvas para PNG
+      const dataUrl = canvas.toDataURL('image/png');
+
+      // Converter para Blob e File
       const response = await fetch(dataUrl);
       const blob = await response.blob();
-      const moment = resultMoments?.[momentIndex];
-      const file = new File([blob], `timeline-${moment?.title.replace(/\s+/g, '-')}.png`, { type: 'image/png' });
+      const file = new File([blob], `timeline-${moment.title.replace(/\s+/g, '-')}.png`, { type: 'image/png' });
 
       // Tentar usar Web Share API (funciona em mobile)
       if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({
           files: [file],
-          title: 'Nosso Timeline',
-          text: `${moment?.title} - ${formData.person1Name} e ${formData.person2Name}`
+          title: 'Nossa Timeline',
+          text: `${moment.title} - ${formData.person1Name} e ${formData.person2Name} 💕`
         });
       } else {
         // Fallback: fazer download
         const link = document.createElement('a');
-        link.download = `timeline-${moment?.title.replace(/\s+/g, '-')}.png`;
+        link.download = `timeline-${moment.title.replace(/\s+/g, '-')}.png`;
         link.href = dataUrl;
         link.click();
       }
@@ -453,6 +518,31 @@ export default function CriarPage() {
       setIsDownloading(false);
       alert('Erro ao gerar imagem para compartilhar');
     }
+  };
+
+  // Função auxiliar para quebrar texto em linhas
+  const wrapText = (ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] => {
+    const words = text.split(' ');
+    const lines: string[] = [];
+    let currentLine = '';
+
+    words.forEach(word => {
+      const testLine = currentLine ? `${currentLine} ${word}` : word;
+      const metrics = ctx.measureText(testLine);
+      
+      if (metrics.width > maxWidth && currentLine) {
+        lines.push(currentLine);
+        currentLine = word;
+      } else {
+        currentLine = testLine;
+      }
+    });
+    
+    if (currentLine) {
+      lines.push(currentLine);
+    }
+    
+    return lines;
   };
 
   const handleDownloadCard = async (cardId: string) => {
